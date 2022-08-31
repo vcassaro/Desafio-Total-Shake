@@ -26,10 +26,10 @@ public class Shake{
 
     @Override
     public String toString() {
-        return this.base.getNome()+" - "+ this.base.getPreco() + " / " +
-                this.fruta.getNome()+" - "+ this.fruta.getPreco() + " / " +
-                this.topping.getNome()+" - "+ this.topping.getPreco() + " / " +
-                this.adicionais + " / " +
-                this.tipoTamanho.toString();
+        return this.base.getNome()+" - R$"+ this.base.getPreco() + " / " +
+                this.fruta.getNome()+" - R$"+ this.fruta.getPreco() + " / " +
+                this.topping.getNome()+" - R$"+ this.topping.getPreco() + " / " +
+                "Adicionais: "+ this.adicionais + " / " +
+                "Tamanho: "+this.tipoTamanho.toString();
     }
 }
