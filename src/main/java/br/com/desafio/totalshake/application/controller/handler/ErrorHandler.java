@@ -1,6 +1,6 @@
 package br.com.desafio.totalshake.application.controller.handler;
 
-import br.com.desafio.totalshake.application.service.exception.PedidoNotFoundException;
+import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,7 +14,7 @@ public class ErrorHandler {
 
 	@ExceptionHandler(value = IllegalArgumentException.class)
 	public ResponseEntity<?> IllegalArgumentException(HttpServletRequest request, IllegalArgumentException exception) {
-		//TODO: testar se a mensagem é nula, se sim estoura outra exception
+		//TODO: testar se a mensagem é nula
 		return ResponseEntity.badRequest().body(
 				SimpleErrorResponse.builder()
 						.timestamp(Instant.now())
@@ -28,7 +28,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(value = org.hibernate.PropertyValueException.class)
     public ResponseEntity<?> PropertyValueException(HttpServletRequest request, org.hibernate.PropertyValueException exception) {
-        //TODO: testar se a mensagem é nula, se sim estoura outra exception
+        //TODO: testar se a mensagem é nula
         return ResponseEntity.badRequest().body(
                 ValidationErrorResponse.builder()
                         .timestamp(Instant.now())
@@ -42,9 +42,9 @@ public class ErrorHandler {
         );
     }
 
-	@ExceptionHandler(value = PedidoNotFoundException.class)
+	@ExceptionHandler(value = ResourceNotFoundException.class)
 	public ResponseEntity<?> PedidoNotFoundException(HttpServletRequest request, Exception exception) {
-		//TODO: testar se a mensagem é nula, se sim estoura outra exception
+		//TODO: testar se a mensagem é nula
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
 				SimpleErrorResponse.builder()
 						.timestamp(Instant.now())

@@ -1,8 +1,8 @@
 package br.com.desafio.totalshake.application.service.exception;
 
-public class PedidoNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException{
 
-    public PedidoNotFoundException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }
