@@ -1,6 +1,7 @@
 package br.com.desafio.totalshake.application.model.mapper;
 
-import br.com.desafio.totalshake.application.model.dto.IngredienteDto;
+import br.com.desafio.totalshake.application.controller.dto.request.IngredienteDtoRequest;
+import br.com.desafio.totalshake.application.controller.dto.response.IngredienteDtoResponse;
 import br.com.desafio.totalshake.application.model.ingredientes.IngredienteModel;
 import br.com.desafio.totalshake.application.model.ingredientes.Base;
 import br.com.desafio.totalshake.application.model.ingredientes.Fruta;
@@ -32,8 +33,23 @@ public class IngredienteMapper {
         return modelMapper.map(ingredienteModel, Topping.class);
     }
 
-    public IngredienteDto convertModelDto(IngredienteModel ingredienteModel){
+    public IngredienteDtoResponse convertModelDtoResponse(IngredienteModel ingredienteModel){
 
-        return modelMapper.map(ingredienteModel, IngredienteDto.class);
+        return modelMapper.map(ingredienteModel, IngredienteDtoResponse.class);
+    }
+
+    public Base convertIngredienteDtoRequestBase(IngredienteDtoRequest ingredienteDtoRequest){
+
+        return modelMapper.map(ingredienteDtoRequest, Base.class);
+    }
+
+    public Fruta convertIngredienteDtoRequestFruta(IngredienteDtoRequest ingredienteDtoRequest){
+
+        return modelMapper.map(ingredienteDtoRequest, Fruta.class);
+    }
+
+    public Topping convertIngredienteDtoRequestCobertura(IngredienteDtoRequest ingredienteDtoRequest){
+
+        return modelMapper.map(ingredienteDtoRequest, Topping.class);
     }
 }
