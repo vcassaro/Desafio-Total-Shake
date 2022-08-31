@@ -29,11 +29,9 @@ public class ItemPedidoModel extends AbstractModel<Long> {
     @Transient
     private Shake shake;
 
-    @NotNull(message = "Campo quantidade não pode estar em branco.")
     private Integer quantidade;
 
     @Column(nullable = true, length = 200)
-    @Size(min = 0, max = 200, message = "Campo descrição deve ter no maximo 200 caracteres")
     private String descricao;
 
     @Column(name = "preco_item_pedido", nullable = false)

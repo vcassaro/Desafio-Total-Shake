@@ -30,7 +30,6 @@ public class PedidoModel extends AbstractModel<Long> {
     @Column(name = "preco_total", nullable = false)
     private Double precoTotal;
 
-    @NotNull(message = "O pedido deve conter pelo menos um item.")
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "pedido",

@@ -17,8 +17,6 @@ import javax.validation.constraints.Size;
 public class ProdutoModel extends AbstractModel<Long> {
 
     @Column(nullable = false, length = 50)
-    @NotEmpty( message = "O campo nome deve ter no minimo 5 e no maximo 50 caracteres")
-    @Size(min = 5, max = 50, message = "O campo nome deve ter no minimo 5 e no maximo 50 caracteres")
     private String nome;
 
     @Column(name = "preco", nullable = true)
