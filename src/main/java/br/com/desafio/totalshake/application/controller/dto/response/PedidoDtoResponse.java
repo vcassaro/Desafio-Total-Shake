@@ -1,4 +1,4 @@
-package br.com.desafio.totalshake.application.model.dto;
+package br.com.desafio.totalshake.application.controller.dto.response;
 
 import br.com.desafio.totalshake.application.model.enums.Status;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PedidoDto extends AbstractDto<Long>{
+public class PedidoDtoResponse extends AbstractDtoResponse<Long> {
 
     private LocalDateTime dataHora;
 
@@ -21,5 +21,5 @@ public class PedidoDto extends AbstractDto<Long>{
 
     private Double precoTotal;
 
-    private List<ItemPedidoDto> itensPedidoList;
+    private List<ItemPedidoDtoResponse> itensPedidoList;
 }

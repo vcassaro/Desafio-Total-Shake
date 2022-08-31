@@ -1,4 +1,4 @@
-package br.com.desafio.totalshake.application.model.dto;
+package br.com.desafio.totalshake.application.controller.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IngredienteDto extends AbstractDto<Long>{
+public class ProdutoDtoResponse {
 
     private String nome;
 
