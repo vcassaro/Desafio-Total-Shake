@@ -1,9 +1,8 @@
 package br.com.desafio.totalshake.application.service;
 
-import br.com.desafio.totalshake.application.model.dto.ClienteDto;
 import br.com.desafio.totalshake.application.model.pedido.ClienteModel;
 import br.com.desafio.totalshake.application.repository.ClienteRepository;
-import org.modelmapper.ModelMapper;
+import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,46 +12,39 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    private final ModelMapper modelMapper;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository, ModelMapper modelMapper) {
+    public ClienteServiceImpl(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Page<ClienteDto> findAllClientes(Pageable pageable) {
-        return clienteRepository.findAll(pageable).map(this::convertModelDto);
+    public Page<ClienteModel> findAllClientes(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
     }
 
     @Override
-    public ClienteDto findClienteById(Long id) {
-        var cliente = clienteRepository.findById(id).orElseThrow(RuntimeException::new);
-        return convertModelDto(cliente);
+    public ClienteModel findClienteById(Long id) {
+
+        return clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
     }
 
     @Override
-    public ClienteDto saveCliente(ClienteModel cliente) {
+    public ClienteModel saveCliente(ClienteModel cliente) {
         cliente.setId(null);
-        return convertModelDto(clienteRepository.save(cliente));
+        return clienteRepository.save(cliente);
     }
 
     @Override
-    public ClienteDto updateCliente(Long id, ClienteModel clienteNovo) {
-        var clienteSave = clienteRepository.findById(id).orElseThrow(RuntimeException::new);
+    public ClienteModel updateCliente(Long id, ClienteModel clienteNovo) {
+        var clienteSave = clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
         clienteSave.setNome(clienteNovo.getNome());
         clienteSave.setEmail(clienteNovo.getEmail());
-        return convertModelDto(clienteRepository.save(clienteSave));
+        return clienteRepository.save(clienteSave);
     }
 
     @Override
     public void deleteCliente(Long id) {
-        clienteRepository.findById(id).orElseThrow(RuntimeException::new);
+        clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
         clienteRepository.deleteById(id);
-    }
-
-    private ClienteDto convertModelDto(ClienteModel clienteModel){
-
-        return modelMapper.map(clienteModel, ClienteDto.class);
     }
 }

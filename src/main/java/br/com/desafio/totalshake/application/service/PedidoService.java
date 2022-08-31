@@ -1,19 +1,19 @@
 package br.com.desafio.totalshake.application.service;
 
 import br.com.desafio.totalshake.application.model.pedido.PedidoModel;
-import br.com.desafio.totalshake.application.model.dto.PedidoDto;
+import br.com.desafio.totalshake.application.controller.dto.response.PedidoDtoResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PedidoService {
 
-    Page<PedidoDto> findAllPedidos(Pageable pageable);
+    Page<PedidoModel> findAllPedidos(Pageable pageable);
 
-    PedidoDto findPedidoById(Long id);
+    PedidoModel findPedidoById(Long id);
 
-    PedidoDto savePedido(PedidoModel pedido);
+    PedidoModel savePedido(PedidoModel pedido);
 
-    PedidoDto updatePedido(Long id, PedidoModel pedido);
+    PedidoModel updatePedido(Long id, PedidoModel pedido);
 
     void deletePedido(Long id);
 }

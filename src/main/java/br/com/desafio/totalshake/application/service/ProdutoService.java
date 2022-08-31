@@ -1,19 +1,19 @@
 package br.com.desafio.totalshake.application.service;
 
-import br.com.desafio.totalshake.application.model.dto.ProdutoDto;
+import br.com.desafio.totalshake.application.controller.dto.response.ProdutoDtoResponse;
 import br.com.desafio.totalshake.application.model.produto.ProdutoModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProdutoService {
 
-    Page<ProdutoDto> findAllProdutos(Pageable pageable);
+    Page<ProdutoModel> findAllProdutos(Pageable pageable);
 
-    ProdutoDto findProdutoById(Long id);
+    ProdutoModel findProdutoById(Long id);
 
-    ProdutoDto saveProduto(ProdutoModel produto);
+    ProdutoModel saveProduto(ProdutoModel produto);
 
-    ProdutoDto updateProduto(Long id, ProdutoModel produto);
+    ProdutoModel updateProduto(Long id, ProdutoModel produto);
 
     void deleteProduto(Long id);
 }

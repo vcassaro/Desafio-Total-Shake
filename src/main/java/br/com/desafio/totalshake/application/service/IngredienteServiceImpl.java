@@ -1,9 +1,9 @@
 package br.com.desafio.totalshake.application.service;
 
-import br.com.desafio.totalshake.application.model.dto.IngredienteDto;
 import br.com.desafio.totalshake.application.model.ingredientes.IngredienteModel;
 import br.com.desafio.totalshake.application.model.mapper.IngredienteMapper;
 import br.com.desafio.totalshake.application.repository.IngredienteRepository;
+import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,33 +21,33 @@ public class IngredienteServiceImpl implements IngredienteService {
     }
 
     @Override
-    public Page<IngredienteDto> findAllIngredientes(Pageable pageable) {
-        return ingredienteRepository.findAll(pageable).map(ingredienteMapper::convertModelDto);
+    public Page<IngredienteModel> findAllIngredientes(Pageable pageable) {
+        return ingredienteRepository.findAll(pageable);
     }
 
     @Override
-    public IngredienteDto findIngredienteById(Long id) {
-        var ingrediente = ingredienteRepository.findById(id).orElseThrow(RuntimeException::new);
-        return ingredienteMapper.convertModelDto(ingrediente);
+    public IngredienteModel findIngredienteById(Long id) {
+
+        return ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
     }
 
     @Override
-    public IngredienteDto saveIngrediente(IngredienteModel ingrediente) {
+    public IngredienteModel saveIngrediente(IngredienteModel ingrediente) {
         ingrediente.setId(null);
-        return ingredienteMapper.convertModelDto(ingredienteRepository.save(ingrediente));
+        return ingredienteRepository.save(ingrediente);
     }
 
     @Override
-    public IngredienteDto updateIngrediente(Long id, IngredienteModel ingredienteNovo) {
-        var ingredienteSave = ingredienteRepository.findById(id).orElseThrow(RuntimeException::new);
+    public IngredienteModel updateIngrediente(Long id, IngredienteModel ingredienteNovo) {
+        var ingredienteSave = ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
         ingredienteSave.setNome(ingredienteNovo.getNome());
         ingredienteSave.setPreco(ingredienteNovo.getPreco());
-        return ingredienteMapper.convertModelDto(ingredienteRepository.save(ingredienteSave));
+        return ingredienteRepository.save(ingredienteSave);
     }
 
     @Override
     public void deleteIngrediente(Long id) {
-        ingredienteRepository.findById(id).orElseThrow(RuntimeException::new);
+        ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
         ingredienteRepository.deleteById(id);
     }
 }

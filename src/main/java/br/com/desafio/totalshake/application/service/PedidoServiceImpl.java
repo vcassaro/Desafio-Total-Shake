@@ -4,12 +4,10 @@ import br.com.desafio.totalshake.application.model.enums.Status;
 import br.com.desafio.totalshake.application.model.mapper.IngredienteMapper;
 import br.com.desafio.totalshake.application.model.pedido.ItemPedidoModel;
 import br.com.desafio.totalshake.application.model.pedido.PedidoModel;
-import br.com.desafio.totalshake.application.repository.PedidoRepository;
-import br.com.desafio.totalshake.application.model.dto.PedidoDto;
 import br.com.desafio.totalshake.application.repository.IngredienteRepository;
+import br.com.desafio.totalshake.application.repository.PedidoRepository;
 import br.com.desafio.totalshake.application.repository.ProdutoRepository;
 import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,34 +26,30 @@ public class PedidoServiceImpl implements PedidoService{
 
     private final ProdutoRepository produtoRepository;
 
-    private final ModelMapper modelMapper;
-
     private final IngredienteMapper ingredienteMapper;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository, IngredienteRepository ingredienteRepository, ProdutoRepository produtoRepository, ModelMapper modelMapper, IngredienteMapper ingredienteMapper) {
+    public PedidoServiceImpl(PedidoRepository pedidoRepository, IngredienteRepository ingredienteRepository, ProdutoRepository produtoRepository, IngredienteMapper ingredienteMapper) {
         this.pedidoRepository = pedidoRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.produtoRepository = produtoRepository;
-        this.modelMapper = modelMapper;
         this.ingredienteMapper = ingredienteMapper;
     }
 
     @Override
-    public Page<PedidoDto> findAllPedidos(Pageable pageable) {
+    public Page<PedidoModel> findAllPedidos(Pageable pageable) {
 
-        return pedidoRepository.findAll(pageable).map(this::convertModelDto);
+        return pedidoRepository.findAll(pageable);
     }
 
     @Override
-    public PedidoDto findPedidoById(Long id) {
+    public PedidoModel findPedidoById(Long id) {
 
-        var pedido = pedidoRepository.findById(id).orElseThrow(RuntimeException::new);
-        return convertModelDto(pedido);
+        return pedidoRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Pedido não encontrado."));
     }
 
     @Override
     @Transactional
-    public PedidoDto savePedido(PedidoModel pedido) {
+    public PedidoModel savePedido(PedidoModel pedido) {
 
         pedido.setItensPedidoList(removeDuplicatas(pedido.getItensPedidoList()));
 
@@ -86,16 +80,16 @@ public class PedidoServiceImpl implements PedidoService{
         pedido.setStatus(Status.REALIZADO);
         pedido.setPrecoTotal(precoTotal);
 
-        return convertModelDto(pedidoRepository.save(pedido));
+        return pedidoRepository.save(pedido);
     }
 
     @Override
     @Transactional
-    public PedidoDto updatePedido(Long id, PedidoModel pedido) {
+    public PedidoModel updatePedido(Long id, PedidoModel pedido) {
 
         pedido.setItensPedidoList(removeDuplicatas(pedido.getItensPedidoList()));
 
-        var pedidoSave = pedidoRepository.findById(id).orElseThrow((() ->new ResourceNotFoundException("Pedido não encontrado.")));
+        var pedidoSave = findPedidoById(id);
 
         pedidoSave.setCliente(pedido.getCliente());
         pedidoSave.setStatus(pedido.getStatus());
@@ -125,14 +119,14 @@ public class PedidoServiceImpl implements PedidoService{
 
         pedidoSave.setPrecoTotal(precoTotal);
 
-        return convertModelDto(pedidoRepository.save(pedidoSave));
+        return pedidoRepository.save(pedidoSave);
     }
 
     @Override
     @Transactional
     public void deletePedido(Long id) {
 
-        pedidoRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Pedido não encontrado."));
+        findPedidoById(id);
         pedidoRepository.deleteById(id);
     }
 
@@ -173,10 +167,5 @@ public class PedidoServiceImpl implements PedidoService{
         );
             
         return itensPedidoSemRepeticao;
-    }
-
-    private PedidoDto convertModelDto(PedidoModel pedidoModel){
-
-        return modelMapper.map(pedidoModel, PedidoDto.class);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.desafio.totalshake.application.controller;
 
-import br.com.desafio.totalshake.application.model.ingredientes.IngredienteModel;
+import br.com.desafio.totalshake.application.controller.dto.request.IngredienteDtoRequest;
 import br.com.desafio.totalshake.application.model.mapper.IngredienteMapper;
 import br.com.desafio.totalshake.application.service.IngredienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +27,30 @@ public class IngredienteController {
 
     @GetMapping("/")
     public ResponseEntity<?> findAllIngredientes(Pageable pageable){
-        return ResponseEntity.ok(ingredienteService.findAllIngredientes(pageable));
+        return ResponseEntity.ok(ingredienteService.findAllIngredientes(pageable).map(ingredienteMapper::convertModelDtoResponse));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> findIngredienteById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(ingredienteService.findIngredienteById(id));
+        return ResponseEntity.ok(ingredienteMapper.convertModelDtoResponse(ingredienteService.findIngredienteById(id)));
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<?> saveIngrediente(@Valid @RequestBody IngredienteModel ingredienteModel){
-        return switch (ingredienteModel.getDiscriminator()) {
+    public ResponseEntity<?> saveIngrediente(@Valid @RequestBody IngredienteDtoRequest ingredienteDtoRequest){
+        return switch (ingredienteDtoRequest.getDiscriminator()) {
             case "base" ->
-                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteBase(ingredienteModel)));
+                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteDtoRequestBase(ingredienteDtoRequest))));
             case "fruta" ->
-                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteFruta(ingredienteModel)));
+                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteDtoRequestFruta(ingredienteDtoRequest))));
             case "cobertura" ->
-                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteCobertura(ingredienteModel)));
+                    ResponseEntity.status(HttpStatus.CREATED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteDtoRequestCobertura(ingredienteDtoRequest))));
             default -> throw new RuntimeException();
         };
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateIngrediente(@PathVariable("id") Long id, @Valid @RequestBody IngredienteModel ingredienteModel){
-        return ResponseEntity.ok(ingredienteService.updateIngrediente(id, ingredienteModel));
+    public ResponseEntity<?> updateIngrediente(@PathVariable("id") Long id, @Valid @RequestBody IngredienteDtoRequest ingredienteDtoRequest){
+        return ResponseEntity.ok(ingredienteMapper.convertModelDtoResponse(ingredienteService.updateIngrediente(id, ingredienteMapper.convertIngredienteDtoRequestCobertura(ingredienteDtoRequest))));
     }
 
     @DeleteMapping(path = "/delete/{id}")

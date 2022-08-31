@@ -1,19 +1,19 @@
 package br.com.desafio.totalshake.application.service;
 
 import br.com.desafio.totalshake.application.model.ingredientes.IngredienteModel;
-import br.com.desafio.totalshake.application.model.dto.IngredienteDto;
+import br.com.desafio.totalshake.application.controller.dto.response.IngredienteDtoResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IngredienteService {
 
-    Page<IngredienteDto> findAllIngredientes(Pageable pageable);
+    Page<IngredienteModel> findAllIngredientes(Pageable pageable);
 
-    IngredienteDto findIngredienteById(Long id);
+    IngredienteModel findIngredienteById(Long id);
 
-    IngredienteDto saveIngrediente(IngredienteModel ingrediente);
+    IngredienteModel saveIngrediente(IngredienteModel ingrediente);
 
-    IngredienteDto updateIngrediente(Long id, IngredienteModel ingredienteNovo);
+    IngredienteModel updateIngrediente(Long id, IngredienteModel ingredienteNovo);
 
     void deleteIngrediente(Long id);
 }
