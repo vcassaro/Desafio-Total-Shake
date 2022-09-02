@@ -3,6 +3,7 @@ package br.com.desafio.totalshake.application.controller;
 import br.com.desafio.totalshake.application.controller.dto.request.PedidoDtoRequest;
 import br.com.desafio.totalshake.application.model.mapper.PedidoMapper;
 import br.com.desafio.totalshake.application.service.PedidoService;
+import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/pedido")
+@RequestMapping("/api/pedidos")
 public class PedidoController {
 
     private final PedidoService pedidoService;
@@ -25,9 +26,13 @@ public class PedidoController {
         this.pedidoMapper = pedidoMapper;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> findAllPedidos(Pageable pageable){
-        return ResponseEntity.ok(pedidoService.findAllPedidos(pageable).map(pedidoMapper::convertModelToDtoResponse));
+        var pedidos = pedidoService.findAllPedidos(pageable).map(pedidoMapper::convertModelToDtoResponse);
+        if(pageable.getPageNumber() > pedidos.getTotalPages()-1){
+            throw new ResourceNotFoundException("Numero de pagina não encontrado.");
+        }
+        return ResponseEntity.ok(pedidos);
     }
 
     @GetMapping(path = "/{id}")
@@ -42,7 +47,7 @@ public class PedidoController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updatePedido(@PathVariable("id") Long id, @Valid @RequestBody PedidoDtoRequest pedidoDtoRequest){
-        return ResponseEntity.ok(pedidoMapper.convertModelToDtoResponse(pedidoService.updatePedido(id, pedidoMapper.convertDtoRequestToModel(pedidoDtoRequest))));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(pedidoMapper.convertModelToDtoResponse(pedidoService.updatePedido(id, pedidoMapper.convertDtoRequestToModel(pedidoDtoRequest))));
     }
 
     @DeleteMapping(path = "/delete/{id}")

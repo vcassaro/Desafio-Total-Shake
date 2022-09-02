@@ -26,8 +26,8 @@ public class ErrorHandler {
 		);
 	}
 
-    @ExceptionHandler(value = org.hibernate.PropertyValueException.class)
-    public ResponseEntity<?> PropertyValueException(HttpServletRequest request, org.hibernate.PropertyValueException exception) {
+    @ExceptionHandler(value = org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<?> MethodArgumentNotValidException(HttpServletRequest request, org.springframework.web.bind.MethodArgumentNotValidException exception) {
         //TODO: testar se a mensagem é nula
         return ResponseEntity.badRequest().body(
                 ValidationErrorResponse.builder()
@@ -36,7 +36,7 @@ public class ErrorHandler {
                         .error(exception.getClass().getName())
                         .message(exception.getMessage())
                         .path(request.getRequestURI())
-                        .field(exception.getPropertyName())
+                        .field(exception.getFieldError().getField())
                         .fieldMessage(exception.getLocalizedMessage())
                         .build()
         );

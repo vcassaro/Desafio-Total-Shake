@@ -3,6 +3,7 @@ package br.com.desafio.totalshake.application.controller;
 import br.com.desafio.totalshake.application.controller.dto.request.IngredienteDtoRequest;
 import br.com.desafio.totalshake.application.model.mapper.IngredienteMapper;
 import br.com.desafio.totalshake.application.service.IngredienteService;
+import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/ingrediente")
+@RequestMapping("/api/ingredientes")
 public class IngredienteController {
 
     private final IngredienteService ingredienteService;
@@ -25,9 +26,13 @@ public class IngredienteController {
         this.ingredienteMapper = ingredienteMapper;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> findAllIngredientes(Pageable pageable){
-        return ResponseEntity.ok(ingredienteService.findAllIngredientes(pageable).map(ingredienteMapper::convertModelDtoResponse));
+        var ingredientes = ingredienteService.findAllIngredientes(pageable).map(ingredienteMapper::convertModelDtoResponse);
+        if(pageable.getPageNumber() > ingredientes.getTotalPages()-1){
+            throw new ResourceNotFoundException("Numero de pagina não encontrado.");
+        }
+        return ResponseEntity.ok(ingredientes);
     }
 
     @GetMapping(path = "/{id}")
@@ -44,13 +49,13 @@ public class IngredienteController {
                     ResponseEntity.status(HttpStatus.CREATED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteDtoRequestFruta(ingredienteDtoRequest))));
             case "cobertura" ->
                     ResponseEntity.status(HttpStatus.CREATED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.saveIngrediente(ingredienteMapper.convertIngredienteDtoRequestCobertura(ingredienteDtoRequest))));
-            default -> throw new RuntimeException();
+            default -> throw new ResourceNotFoundException("Tipo de ingrediente "+ingredienteDtoRequest.getDiscriminator()+" não existe.");
         };
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateIngrediente(@PathVariable("id") Long id, @Valid @RequestBody IngredienteDtoRequest ingredienteDtoRequest){
-        return ResponseEntity.ok(ingredienteMapper.convertModelDtoResponse(ingredienteService.updateIngrediente(id, ingredienteMapper.convertIngredienteDtoRequestCobertura(ingredienteDtoRequest))));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ingredienteMapper.convertModelDtoResponse(ingredienteService.updateIngrediente(id, ingredienteMapper.convertIngredienteDtoRequestCobertura(ingredienteDtoRequest))));
     }
 
     @DeleteMapping(path = "/delete/{id}")
