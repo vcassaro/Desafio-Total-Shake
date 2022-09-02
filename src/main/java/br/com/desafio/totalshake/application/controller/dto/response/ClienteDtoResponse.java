@@ -14,6 +14,4 @@ public class ClienteDtoResponse extends AbstractDtoResponse<Long> {
     private String nome;
 
     private String email;
-
-    private List<PedidoDtoResponse> pedidos;
 }

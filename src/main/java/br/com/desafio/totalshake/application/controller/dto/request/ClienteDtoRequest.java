@@ -1,6 +1,5 @@
 package br.com.desafio.totalshake.application.controller.dto.request;
 
-import br.com.desafio.totalshake.application.model.pedido.PedidoModel;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -25,5 +24,5 @@ public class ClienteDtoRequest extends AbstractDtoRequest<Long> {
     @Email(message = "O campo email deve ser valido")
     private String email;
 
-    private List<PedidoModel> pedidos;
+    private List<PedidoDtoRequest> pedidos;
 }

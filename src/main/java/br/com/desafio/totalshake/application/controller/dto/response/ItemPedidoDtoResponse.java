@@ -11,8 +11,6 @@ public class ItemPedidoDtoResponse extends AbstractDtoResponse<Long> {
 
     private String pedido;
 
-    private String shake;
-
     private Integer quantidade;
 
     private String descricao;
