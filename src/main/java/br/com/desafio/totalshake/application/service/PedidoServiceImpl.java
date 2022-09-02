@@ -57,19 +57,19 @@ public class PedidoServiceImpl implements PedidoService{
 
             if(item.getShake() != null){
                 item.getShake().setBase(ingredienteMapper.convertIngredienteBase(
-                        ingredienteRepository.findById(item.getShake().getBase().getId()).orElseThrow(() ->new ResourceNotFoundException("Base para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getBase().getId()).orElseThrow(() ->new ResourceNotFoundException("Base para shake com id: "+item.getShake().getBase().getId()+" não encontrada."))));
                 item.getShake().setFruta(ingredienteMapper.convertIngredienteFruta(
-                        ingredienteRepository.findById(item.getShake().getFruta().getId()).orElseThrow(() ->new ResourceNotFoundException("Fruta para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getFruta().getId()).orElseThrow(() ->new ResourceNotFoundException("Fruta para shake com id: "+item.getShake().getFruta().getId()+" não encontrada."))));
                 item.getShake().setTopping(ingredienteMapper.convertIngredienteCobertura(
-                        ingredienteRepository.findById(item.getShake().getTopping().getId()).orElseThrow(() ->new ResourceNotFoundException("Cobertura para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getTopping().getId()).orElseThrow(() ->new ResourceNotFoundException("Cobertura para shake com id: "+item.getShake().getTopping().getId()+" não encontrada."))));
                 item.setPrecoItemPedido(calcularPrecoShake(item));
-                item.setDescricao(item.getQuantidade().toString()+" Shakes :"+item.getShake().toString());
+                item.setDescricao(item.getShake().toString());
                 item.setPedido(pedido);
                 return item.getPrecoItemPedido();
             } else {
-                item.setProduto(produtoRepository.findById(item.getProduto().getId()).orElseThrow(() ->new ResourceNotFoundException("Produto não encontrado.")));
+                item.setProduto(produtoRepository.findById(item.getProduto().getId()).orElseThrow(() ->new ResourceNotFoundException("Produto com id: "+item.getProduto().getId()+" não encontrado.")));
                 item.setPrecoItemPedido(item.getProduto().getPreco()* item.getQuantidade());
-                item.setDescricao(item.getQuantidade().toString()+" "+item.getProduto().toString());
+                item.setDescricao(item.getProduto().toString());
                 item.setPedido(pedido);
                 return item.getPrecoItemPedido();
             }
@@ -99,19 +99,19 @@ public class PedidoServiceImpl implements PedidoService{
 
             if(item.getShake() != null){
                 item.getShake().setBase(ingredienteMapper.convertIngredienteBase(
-                        ingredienteRepository.findById(item.getShake().getBase().getId()).orElseThrow(() ->new ResourceNotFoundException("Base para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getBase().getId()).orElseThrow(() ->new ResourceNotFoundException("Base para shake com id: "+item.getShake().getBase().getId()+" não encontrada."))));
                 item.getShake().setFruta(ingredienteMapper.convertIngredienteFruta(
-                        ingredienteRepository.findById(item.getShake().getFruta().getId()).orElseThrow(() ->new ResourceNotFoundException("Fruta para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getFruta().getId()).orElseThrow(() ->new ResourceNotFoundException("Fruta para shake com id: "+item.getShake().getFruta().getId()+" não encontrada."))));
                 item.getShake().setTopping(ingredienteMapper.convertIngredienteCobertura(
-                        ingredienteRepository.findById(item.getShake().getTopping().getId()).orElseThrow(() ->new ResourceNotFoundException("Cobertura para shake não encontrada."))));
+                        ingredienteRepository.findById(item.getShake().getTopping().getId()).orElseThrow(() ->new ResourceNotFoundException("Cobertura para shake com id: "+item.getShake().getTopping().getId()+" não encontrada."))));
                 item.setPrecoItemPedido(calcularPrecoShake(item));
-                item.setDescricao(item.getQuantidade().toString()+" Shakes :"+item.getShake().toString());
+                item.setDescricao(item.getShake().toString());
                 item.setPedido(pedido);
                 return item.getPrecoItemPedido();
             } else {
-                item.setProduto(produtoRepository.findById(item.getProduto().getId()).orElseThrow(() ->new ResourceNotFoundException("Produto não encontrado.")));
+                item.setProduto(produtoRepository.findById(item.getProduto().getId()).orElseThrow(() ->new ResourceNotFoundException("Produto com id: "+item.getProduto().getId()+" não encontrado.")));
                 item.setPrecoItemPedido(item.getProduto().getPreco()* item.getQuantidade());
-                item.setDescricao(item.getQuantidade().toString()+" "+item.getProduto().toString());
+                item.setDescricao(item.getProduto().toString());
                 item.setPedido(pedido);
                 return item.getPrecoItemPedido();
             }

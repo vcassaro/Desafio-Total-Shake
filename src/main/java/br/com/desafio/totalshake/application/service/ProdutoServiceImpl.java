@@ -23,7 +23,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoModel findProdutoById(Long id) {
-        return produtoRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Produto não encontrado."));
+        return produtoRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Produto com id: "+id+" não encontrado."));
     }
 
     @Override

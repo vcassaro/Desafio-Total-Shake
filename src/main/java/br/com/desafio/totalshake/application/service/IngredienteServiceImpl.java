@@ -1,7 +1,6 @@
 package br.com.desafio.totalshake.application.service;
 
 import br.com.desafio.totalshake.application.model.ingredientes.IngredienteModel;
-import br.com.desafio.totalshake.application.model.mapper.IngredienteMapper;
 import br.com.desafio.totalshake.application.repository.IngredienteRepository;
 import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -13,11 +12,8 @@ public class IngredienteServiceImpl implements IngredienteService {
 
     private final IngredienteRepository ingredienteRepository;
 
-    private final IngredienteMapper ingredienteMapper;
-
-    public IngredienteServiceImpl(IngredienteRepository ingredienteRepository, IngredienteMapper ingredienteMapper) {
+    public IngredienteServiceImpl(IngredienteRepository ingredienteRepository) {
         this.ingredienteRepository = ingredienteRepository;
-        this.ingredienteMapper = ingredienteMapper;
     }
 
     @Override
@@ -28,7 +24,7 @@ public class IngredienteServiceImpl implements IngredienteService {
     @Override
     public IngredienteModel findIngredienteById(Long id) {
 
-        return ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
+        return ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente com id: "+id+" não encontrado."));
     }
 
     @Override
@@ -39,7 +35,7 @@ public class IngredienteServiceImpl implements IngredienteService {
 
     @Override
     public IngredienteModel updateIngrediente(Long id, IngredienteModel ingredienteNovo) {
-        var ingredienteSave = ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
+        var ingredienteSave = findIngredienteById(id);
         ingredienteSave.setNome(ingredienteNovo.getNome());
         ingredienteSave.setPreco(ingredienteNovo.getPreco());
         return ingredienteRepository.save(ingredienteSave);
@@ -47,7 +43,7 @@ public class IngredienteServiceImpl implements IngredienteService {
 
     @Override
     public void deleteIngrediente(Long id) {
-        ingredienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Ingrediente não encontrado."));
+        findIngredienteById(id);
         ingredienteRepository.deleteById(id);
     }
 }

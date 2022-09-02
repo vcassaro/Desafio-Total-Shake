@@ -1,11 +1,14 @@
 package br.com.desafio.totalshake.application.service;
 
 import br.com.desafio.totalshake.application.model.pedido.ClienteModel;
+import br.com.desafio.totalshake.application.model.pedido.PedidoModel;
 import br.com.desafio.totalshake.application.repository.ClienteRepository;
 import br.com.desafio.totalshake.application.service.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -25,7 +28,13 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteModel findClienteById(Long id) {
 
-        return clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
+        return clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente com id: "+id+" não encontrado."));
+    }
+
+    @Override
+    public List<PedidoModel> findPedidosByClienteId(Long id) {
+
+        return findClienteById(id).getPedidos();
     }
 
     @Override
@@ -36,7 +45,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteModel updateCliente(Long id, ClienteModel clienteNovo) {
-        var clienteSave = clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
+        var clienteSave = findClienteById(id);
         clienteSave.setNome(clienteNovo.getNome());
         clienteSave.setEmail(clienteNovo.getEmail());
         return clienteRepository.save(clienteSave);
@@ -44,7 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void deleteCliente(Long id) {
-        clienteRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("Cliente não encontrado."));
+        findClienteById(id);
         clienteRepository.deleteById(id);
     }
 }
